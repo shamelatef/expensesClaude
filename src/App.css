@@ -406,6 +406,147 @@
   white-space: nowrap;
 }
 
+/* ── Custom Select ───────────────────────────────────── */
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+.select-trigger {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  color: #1e293b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.select-trigger:hover,
+.select-trigger.open {
+  border-color: #6366f1;
+  background: white;
+}
+.select-selected {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.select-placeholder {
+  color: #94a3b8;
+}
+.select-arrow {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+.select-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.625rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  z-index: 999;
+  padding: 0.35rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.select-option:hover {
+  background: #f1f5f9;
+}
+.select-option.selected {
+  background: #ede9fe;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* ── Date Range Filter ───────────────────────────────── */
+.date-range {
+  margin-bottom: 1rem;
+}
+.date-range-inputs {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 120px;
+}
+.date-field label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.date-field input {
+  padding: 0.45rem 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  background: #f8fafc;
+  color: #1e293b;
+  width: 100%;
+}
+.date-field input:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: white;
+}
+.date-sep {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  padding-bottom: 0.45rem;
+}
+.btn-clear {
+  padding: 0.45rem 0.875rem;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.btn-clear:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #ef4444;
+}
+
 /* ── Loading ─────────────────────────────────────────── */
 .loading {
   text-align: center;

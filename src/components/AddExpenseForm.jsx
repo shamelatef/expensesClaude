@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import CustomSelect from './CustomSelect'
 
 export default function AddExpenseForm({ categories, onAdd }) {
   const today = new Date().toISOString().split('T')[0]
@@ -8,6 +9,12 @@ export default function AddExpenseForm({ categories, onAdd }) {
   const [date, setDate] = useState(today)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+
+  const categoryOptions = categories.map(c => ({
+    value: c.id,
+    label: c.name,
+    color: c.color,
+  }))
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -47,12 +54,12 @@ export default function AddExpenseForm({ categories, onAdd }) {
 
       <div className="form-row">
         <label>Category</label>
-        <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required>
-          <option value="">Select category…</option>
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>{cat.name}</option>
-          ))}
-        </select>
+        <CustomSelect
+          value={categoryId}
+          onChange={setCategoryId}
+          options={categoryOptions}
+          placeholder="Select category…"
+        />
       </div>
 
       <div className="form-row">
@@ -75,7 +82,7 @@ export default function AddExpenseForm({ categories, onAdd }) {
         />
       </div>
 
-      <button type="submit" className="btn-primary" disabled={loading}>
+      <button type="submit" className="btn-primary" disabled={loading || !categoryId}>
         {loading ? 'Adding…' : success ? '✓ Added!' : 'Add Expense'}
       </button>
     </form>

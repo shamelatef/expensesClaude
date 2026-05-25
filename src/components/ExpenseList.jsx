@@ -1,11 +1,30 @@
+import { useState } from 'react'
+
 export default function ExpenseList({ expenses, categories, activeCategory, onFilter, onDelete }) {
+  const [fromDate, setFromDate] = useState('')
+  const [toDate, setToDate] = useState('')
+
+  const hasDateFilter = fromDate || toDate
+
+  const filtered = expenses.filter(exp => {
+    if (fromDate && exp.date < fromDate) return false
+    if (toDate && exp.date > toDate) return false
+    return true
+  })
+
+  function clearDates() {
+    setFromDate('')
+    setToDate('')
+  }
+
   return (
     <div className="card expense-list">
       <div className="list-header">
         <h2>Expenses</h2>
-        <span className="count">{expenses.length} item{expenses.length !== 1 ? 's' : ''}</span>
+        <span className="count">{filtered.length} item{filtered.length !== 1 ? 's' : ''}</span>
       </div>
 
+      {/* Category filter tabs */}
       <div className="filter-tabs">
         <button
           className={`tab${activeCategory === 'All' ? ' active' : ''}`}
@@ -29,11 +48,39 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
         ))}
       </div>
 
-      {expenses.length === 0 ? (
-        <p className="empty">No expenses yet — add one!</p>
+      {/* Date range filter */}
+      <div className="date-range">
+        <div className="date-range-inputs">
+          <div className="date-field">
+            <label>From</label>
+            <input
+              type="date"
+              value={fromDate}
+              onChange={e => setFromDate(e.target.value)}
+            />
+          </div>
+          <span className="date-sep">→</span>
+          <div className="date-field">
+            <label>To</label>
+            <input
+              type="date"
+              value={toDate}
+              onChange={e => setToDate(e.target.value)}
+            />
+          </div>
+          {hasDateFilter && (
+            <button type="button" className="btn-clear" onClick={clearDates}>
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className="empty">No expenses found.</p>
       ) : (
         <ul className="expense-items">
-          {expenses.map(exp => (
+          {filtered.map(exp => (
             <li key={exp.id} className="expense-item">
               <div
                 className="category-dot"
