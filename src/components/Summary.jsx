@@ -3,8 +3,6 @@ export default function Summary({ expenses, categories }) {
 
   const todayExpenses = expenses.filter(e => e.date === today)
   const todayTotal = todayExpenses.reduce((sum, e) => sum + Number(e.amount), 0)
-  const allTimeTotal = expenses.reduce((sum, e) => sum + Number(e.amount), 0)
-
   const byCategory = categories.map(cat => ({
     ...cat,
     todayTotal: todayExpenses
@@ -23,10 +21,7 @@ export default function Summary({ expenses, categories }) {
           <div className="total-label">Today · {todayLabel}</div>
           <div className="total-amount">EGP {todayTotal.toFixed(2)}</div>
         </div>
-        <div className="total-meta">
-          <div className="total-count">{todayExpenses.length} expense{todayExpenses.length !== 1 ? 's' : ''} today</div>
-          <div className="total-alltime">All time: EGP {allTimeTotal.toFixed(2)}</div>
-        </div>
+        <div className="total-count">{todayExpenses.length} expense{todayExpenses.length !== 1 ? 's' : ''} today</div>
       </div>
       <div className="category-cards">
         {byCategory.map(cat => (
