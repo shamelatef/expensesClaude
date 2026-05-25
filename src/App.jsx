@@ -57,7 +57,7 @@ export default function App() {
   async function addExpense(expense) {
     const { data, error } = await supabase
       .from('expenses')
-      .insert([expense])
+      .insert([{ ...expense, user_id: session.user.id }])
       .select('*, categories(name, color)')
     if (!error && data) setExpenses(prev => [data[0], ...prev])
   }
