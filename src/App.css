@@ -340,24 +340,65 @@
   padding: 2.5rem;
   font-size: 0.9rem;
 }
+.expense-days {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-height: 580px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+.expense-days::-webkit-scrollbar {
+  width: 4px;
+}
+.expense-days::-webkit-scrollbar-track {
+  background: transparent;
+}
+.expense-days::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 2px;
+}
+.day-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0.25rem;
+  border-bottom: 1.5px solid #f1f5f9;
+  margin-bottom: 0.1rem;
+}
+.day-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.day-total {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6366f1;
+}
+.range-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-radius: 0.625rem;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
 .expense-items {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  max-height: 520px;
-  overflow-y: auto;
-  padding-right: 0.25rem;
-}
-.expense-items::-webkit-scrollbar {
-  width: 4px;
-}
-.expense-items::-webkit-scrollbar-track {
-  background: transparent;
-}
-.expense-items::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 2px;
+  gap: 0.4rem;
 }
 .expense-item {
   display: flex;
