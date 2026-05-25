@@ -51,7 +51,7 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
                   {exp.date}
                 </span>
               </div>
-              <span className="expense-amount">${Number(exp.amount).toFixed(2)}</span>
+              <span className="expense-amount">EGP {Number(exp.amount).toFixed(2)}</span>
               <button
                 className="btn-delete"
                 onClick={() => onDelete(exp.id)}

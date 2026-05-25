@@ -13,7 +13,7 @@ export default function Summary({ expenses, categories }) {
       <div className="total-card">
         <div>
           <div className="total-label">Total Spent</div>
-          <div className="total-amount">${total.toFixed(2)}</div>
+          <div className="total-amount">EGP {total.toFixed(2)}</div>
         </div>
         <div className="total-count">{expenses.length} expenses</div>
       </div>
@@ -21,7 +21,7 @@ export default function Summary({ expenses, categories }) {
         {byCategory.map(cat => (
           <div key={cat.id} className="cat-card" style={{ borderTopColor: cat.color }}>
             <span className="cat-name">{cat.name}</span>
-            <span className="cat-total">${cat.total.toFixed(2)}</span>
+            <span className="cat-total">EGP {cat.total.toFixed(2)}</span>
           </div>
         ))}
       </div>

@@ -33,7 +33,7 @@ export default function AddExpenseForm({ categories, onAdd }) {
       <h2>Add Expense</h2>
 
       <div className="form-row">
-        <label>Amount ($)</label>
+        <label>Amount (EGP)</label>
         <input
           type="number"
           step="0.01"
