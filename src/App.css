@@ -547,6 +547,106 @@
   color: #ef4444;
 }
 
+/* ── Auth page ───────────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
+  padding: 1rem;
+}
+.auth-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+}
+.auth-logo {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.35rem;
+}
+.auth-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+  letter-spacing: 0.3px;
+}
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem 1.25rem;
+  background: white;
+  color: #1e293b;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.625rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.btn-google:hover:not(:disabled) {
+  border-color: #94a3b8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+.btn-google:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Header user row ─────────────────────────────────── */
+.header-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+.user-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-signout {
+  padding: 0.3rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-signout:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 /* ── Loading ─────────────────────────────────────────── */
 .loading {
   text-align: center;

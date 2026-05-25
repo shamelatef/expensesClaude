@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { supabase, isConfigured } from './lib/supabase'
+import { supabase } from './lib/supabase'
+import AuthPage from './components/AuthPage'
 import Summary from './components/Summary'
 import AddExpenseForm from './components/AddExpenseForm'
 import ExpenseList from './components/ExpenseList'
@@ -7,19 +8,31 @@ import CategoryManager from './components/CategoryManager'
 import './App.css'
 
 export default function App() {
+  const [session, setSession] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
+
   const [expenses, setExpenses] = useState([])
   const [categories, setCategories] = useState([])
   const [activeCategory, setActiveCategory] = useState('All')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Auth listener
   useEffect(() => {
-    if (!isConfigured) {
-      setLoading(false)
-      return
-    }
-    fetchData()
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setAuthLoading(false)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
   }, [])
+
+  // Load data once logged in
+  useEffect(() => {
+    if (session) fetchData()
+  }, [session])
 
   async function fetchData() {
     setLoading(true)
@@ -33,7 +46,7 @@ export default function App() {
         .order('created_at', { ascending: false }),
     ])
     if (catsRes.error || expsRes.error) {
-      setError('Could not load data. Check your Supabase credentials.')
+      setError('Could not load data. Check your Supabase setup.')
     } else {
       setCategories(catsRes.data || [])
       setExpenses(expsRes.data || [])
@@ -46,16 +59,12 @@ export default function App() {
       .from('expenses')
       .insert([expense])
       .select('*, categories(name, color)')
-    if (!error && data) {
-      setExpenses(prev => [data[0], ...prev])
-    }
+    if (!error && data) setExpenses(prev => [data[0], ...prev])
   }
 
   async function deleteExpense(id) {
     const { error } = await supabase.from('expenses').delete().eq('id', id)
-    if (!error) {
-      setExpenses(prev => prev.filter(e => e.id !== id))
-    }
+    if (!error) setExpenses(prev => prev.filter(e => e.id !== id))
   }
 
   async function addCategory(name, color) {
@@ -63,9 +72,11 @@ export default function App() {
       .from('categories')
       .insert([{ name, color }])
       .select()
-    if (!error && data) {
-      setCategories(prev => [...prev, data[0]])
-    }
+    if (!error && data) setCategories(prev => [...prev, data[0]])
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut()
   }
 
   const filtered =
@@ -73,24 +84,37 @@ export default function App() {
       ? expenses
       : expenses.filter(e => e.categories?.name === activeCategory)
 
+  if (authLoading) return <div className="loading">Loading…</div>
+  if (!session) return <AuthPage />
+
+  const user = session.user
+
   return (
     <div className="app">
       <header className="header">
+        <div className="header-top">
+          <div />
+          <div className="user-info">
+            {user.user_metadata?.avatar_url && (
+              <img
+                src={user.user_metadata.avatar_url}
+                alt="avatar"
+                className="user-avatar"
+              />
+            )}
+            <span className="user-name">
+              {user.user_metadata?.full_name || user.email}
+            </span>
+            <button className="btn-signout" onClick={signOut}>
+              Sign out
+            </button>
+          </div>
+        </div>
         <h1>Expense Tracker</h1>
         <p className="subtitle">Food · Fun · Car · GYM · Med &amp; more</p>
       </header>
 
-      {!isConfigured && (
-        <div className="setup-banner">
-          <strong>Setup required:</strong> Copy <code>.env.example</code> to{' '}
-          <code>.env</code> and add your Supabase URL and anon key, then run{' '}
-          <code>npm run dev</code>.
-        </div>
-      )}
-
-      {error && (
-        <div className="error-banner">{error}</div>
-      )}
+      {error && <div className="error-banner">{error}</div>}
 
       {loading ? (
         <div className="loading">Loading…</div>
