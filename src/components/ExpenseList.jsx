@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as XLSX from 'xlsx'
 
 function formatDateHeader(dateStr) {
   const today = new Date().toISOString().split('T')[0]
@@ -6,10 +7,7 @@ function formatDateHeader(dateStr) {
   if (dateStr === today) return 'Today'
   if (dateStr === yesterday) return 'Yesterday'
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
 }
 
@@ -19,8 +17,37 @@ function groupByDate(expenses) {
     if (!groups[exp.date]) groups[exp.date] = []
     groups[exp.date].push(exp)
   }
-  // Return sorted descending by date
   return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a))
+}
+
+function exportToExcel(expenses, fromDate, toDate) {
+  const rows = expenses.map(exp => ({
+    'Date':        exp.date,
+    'Description': exp.description || '',
+    'Category':    exp.categories?.name || '',
+    'Amount (EGP)': Number(exp.amount),
+  }))
+
+  // Add a totals row at the bottom
+  const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0)
+  rows.push({ 'Date': '', 'Description': '', 'Category': 'TOTAL', 'Amount (EGP)': total })
+
+  const ws = XLSX.utils.json_to_sheet(rows)
+
+  // Column widths
+  ws['!cols'] = [
+    { wch: 14 }, // Date
+    { wch: 30 }, // Description
+    { wch: 14 }, // Category
+    { wch: 16 }, // Amount
+  ]
+
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Expenses')
+
+  const from = fromDate || 'all'
+  const to   = toDate   || 'all'
+  XLSX.writeFile(wb, `expenses_${from}_to_${to}.xlsx`)
 }
 
 export default function ExpenseList({ expenses, categories, activeCategory, onFilter, onDelete }) {
@@ -36,7 +63,6 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
   })
 
   const grouped = groupByDate(filtered)
-
   const totalFiltered = filtered.reduce((sum, e) => sum + Number(e.amount), 0)
 
   return (
@@ -51,9 +77,7 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
         <button
           className={`tab${activeCategory === 'All' ? ' active' : ''}`}
           onClick={() => onFilter('All')}
-        >
-          All
-        </button>
+        >All</button>
         {categories.map(cat => (
           <button
             key={cat.id}
@@ -64,13 +88,11 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
                 : {}
             }
             onClick={() => onFilter(cat.name)}
-          >
-            {cat.name}
-          </button>
+          >{cat.name}</button>
         ))}
       </div>
 
-      {/* Date range filter */}
+      {/* Date range + Export */}
       <div className="date-range">
         <div className="date-range-inputs">
           <div className="date-field">
@@ -88,6 +110,17 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
             </button>
           )}
         </div>
+
+        {filtered.length > 0 && (
+          <button
+            type="button"
+            className="btn-export"
+            onClick={() => exportToExcel(filtered, fromDate, toDate)}
+            title="Export to Excel"
+          >
+            ⬇ Export Excel
+          </button>
+        )}
       </div>
 
       {filtered.length === 0 ? (
@@ -105,10 +138,7 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
                 <ul className="expense-items">
                   {dayExpenses.map(exp => (
                     <li key={exp.id} className="expense-item">
-                      <div
-                        className="category-dot"
-                        style={{ background: exp.categories?.color || '#94a3b8' }}
-                      />
+                      <div className="category-dot" style={{ background: exp.categories?.color || '#94a3b8' }} />
                       <div className="expense-info">
                         <span className="expense-desc">
                           {exp.description || exp.categories?.name || 'Expense'}
@@ -120,11 +150,7 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
                         </span>
                       </div>
                       <span className="expense-amount">EGP {Number(exp.amount).toFixed(2)}</span>
-                      <button
-                        className="btn-delete"
-                        onClick={() => onDelete(exp.id)}
-                        title="Delete"
-                      >×</button>
+                      <button className="btn-delete" onClick={() => onDelete(exp.id)} title="Delete">×</button>
                     </li>
                   ))}
                 </ul>
@@ -132,7 +158,7 @@ export default function ExpenseList({ expenses, categories, activeCategory, onFi
             )
           })}
 
-          {/* Grand total when date filter is active */}
+          {/* Period total */}
           {hasDateFilter && (
             <div className="range-total">
               <span>Total for period</span>
